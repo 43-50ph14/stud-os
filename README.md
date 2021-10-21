@@ -5,6 +5,7 @@ implementation of an operating system for riscv
 ## to do once
 **install docker on your system**
 visit https://www.docker.com/ and figure out yourself
+
 **clone the repo**
 ```
 git clone https://github.com/43-50ph14/stud-os.git
