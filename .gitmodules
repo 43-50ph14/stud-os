@@ -1,3 +1,0 @@
-[submodule "sel4-tutorials-manifest"]
-	path = sel4-tutorials-manifest
-	url = https://github.com/seL4/sel4-tutorials-manifest
