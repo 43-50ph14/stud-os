@@ -6,8 +6,8 @@
 
 set(CapDLToolDirectory ${CMAKE_CURRENT_LIST_DIR})
 
-include(make)
-include(debug)
+# include(make)
+# include(debug)
 # Build and install capDL-tool
 # Path of installed tool will be returned in program_path
 # This assumes that there are no other dependencies.

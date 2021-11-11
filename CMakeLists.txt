@@ -1,3 +1,6 @@
+# find a way to set board to pc
+set(TUT_BOARD "pc")
+set(TUT_ARCH "x86_64")
 include(./projects/sel4-tutorials/settings.cmake)
 
 cmake_minimum_required(VERSION 3.7.2)

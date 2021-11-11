@@ -78,11 +78,11 @@ set(KernelNumDomains 1 CACHE STRING "" FORCE)
 
 # We must build the debug kernel because the tutorials rely on seL4_DebugPutChar
 # and they don't initialize a platsupport driver.
-ApplyCommonReleaseVerificationSettings(FALSE FALSE)
+# ApplyCommonReleaseVerificationSettings(FALSE FALSE)
 
 # We will attempt to generate a simulation script, so try and generate a simulation
 # compatible configuration
-ApplyCommonSimulationSettings(${KernelSel4Arch})
+# ApplyCommonSimulationSettings(${KernelSel4Arch})
 if(FORCE_IOMMU)
     set(KernelIOMMU ON CACHE BOOL "" FORCE)
 endif()
