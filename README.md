@@ -11,6 +11,7 @@ visit https://www.docker.com/ and figure out yourself
 git clone https://github.com/43-50ph14/stud-os.git
 cd seL4-CAmkEs-L4v-dockerfiles
 make user
+make user_sel4-riscv
 ```
 to make your live easier, set an alias to start the docker container
 ```
