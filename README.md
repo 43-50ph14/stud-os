@@ -46,3 +46,7 @@ cd build
 ninja
 ./simulate
 ```
+
+:::danger
+never ever bring a build directory to git!!!
+:::
