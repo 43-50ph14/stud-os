@@ -14,7 +14,7 @@ make user
 ```
 to make your live easier, set an alias to start the docker container
 ```
-echo $'alias container=\'make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user HOST_DIR=$(pwd)\'' 
+echo $'alias container_risc-v=\'make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user_sel4-riscv HOST_DIR=$(pwd)\'' >> ~/.bashrc
 ```
 in a new terminal run
 ```
@@ -22,32 +22,27 @@ source ~/.bashrc
 ```
 reference: https://docs.sel4.systems/projects/dockerfiles/
 
-**submodule stuff**
-either be smart while cloning the repo with
+## init build dir
+ ```
+ cd dobbyOS
+ # start container
+ container_risc-v
+ # initialize build
+ mkdir build && cd build
+ ../init-build.sh -DPLATFORM=spike -DSIMULATION=TRUE
+ninja
+# simulate 
+./simulate
 ```
-git clone --recurse-submodules https://github.com/43-50ph14/stud-os.git
-```
-or do it afterwards
-```
-git submodule init
-git submodule update
-```
-
-then you need to get the seL4 code 
-```
-cd sel4-tutorials-manifest  
-repo init -u https://github.com/seL4/sel4-tutorials-manifest
-repo sync
-```
-see here: https://docs.sel4.systems/Tutorials/#get-the-code
-
+ 
 ## something like a workflow
 
 1. work do stuff whatever
 2. simulate/compile
 ```
 # in your directory with the code
-container
+conatiner_risc-v
+cd build
 ninja
 ./simulate
 ```
