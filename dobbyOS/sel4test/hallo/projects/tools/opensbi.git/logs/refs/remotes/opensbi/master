@@ -1,0 +1,1 @@
+0000000000000000000000000000000000000000 d335a178d8cfdf2ed13af70fe385f7e38162e171 43-50ph14 <so_s@gmx.de> 1636921685 +0100	fetch --quiet --progress opensbi --tags +refs/heads/*:refs/remotes/opensbi/* +refs/tags/v0.8:refs/tags/v0.8 +refs/tags/*:refs/tags/*: storing head

@@ -1,0 +1,4 @@
+7b71e82ca6802a712475d0e523e689f190303bd3		branch '11.0.x-compatible' of https://github.com/seL4/sel4runtime
+2755b9d840a4600a09cb9e880b6c14c7d2177d09		branch '12.0.x-compatible' of https://github.com/seL4/sel4runtime
+e1c51c9b506708398bb1ffbf9098ae82855d3c14		branch '12.1.x-compatible' of https://github.com/seL4/sel4runtime
+c27050513503f615137950cb3918f6f040f34407		branch 'master' of https://github.com/seL4/sel4runtime

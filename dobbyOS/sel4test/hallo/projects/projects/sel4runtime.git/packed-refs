@@ -1,0 +1,5 @@
+# pack-refs with: peeled fully-peeled sorted 
+7b71e82ca6802a712475d0e523e689f190303bd3 refs/remotes/seL4/11.0.x-compatible
+2755b9d840a4600a09cb9e880b6c14c7d2177d09 refs/remotes/seL4/12.0.x-compatible
+e1c51c9b506708398bb1ffbf9098ae82855d3c14 refs/remotes/seL4/12.1.x-compatible
+c27050513503f615137950cb3918f6f040f34407 refs/remotes/seL4/master
