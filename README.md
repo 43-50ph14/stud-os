@@ -47,6 +47,6 @@ ninja
 ./simulate
 ```
 
-:::danger
-never ever bring a build directory to git!!!
-:::
+
+⚠️ never ever bring a build directory to git!!! ⚠️
+
