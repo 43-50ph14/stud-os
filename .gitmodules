@@ -1,0 +1,12 @@
+[submodule "dobbyOS/tools"]
+	path = dobbyOS/tools
+	url = https://github.com/seL4/seL4_tools.git
+[submodule "dobbyOS/projects/seL4_libs"]
+	path = dobbyOS/projects/seL4_libs
+	url = https://github.com/seL4/seL4_libs.git
+[submodule "dobbyOS/projects/musllibc"]
+	path = dobbyOS/projects/musllibc
+	url = https://github.com/seL4/musllibc.git
+[submodule "dobbyOS/projects/util_libs"]
+	path = dobbyOS/projects/util_libs
+	url = https://github.com/seL4/util_libs.git
