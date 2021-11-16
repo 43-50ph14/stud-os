@@ -1,0 +1,1 @@
+tools/cmake-tool/helpers/application_settings.cmake
