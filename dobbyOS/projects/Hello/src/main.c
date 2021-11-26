@@ -2,6 +2,6 @@
 
 int main(void)
 {
-    printf("Hello World\n");
+    printf("the suffering ended, we succeded\n");
     return 0;
 }
