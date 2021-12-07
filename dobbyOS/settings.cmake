@@ -15,38 +15,6 @@ include(/host/application_settings.cmake)
 set(KernelArch "riscv")
 set(KernelPlatform "spike")
 set(KernelSel4Arch "riscv")
-# Set arch and board specific kernel parameters here.
-#if(${TUT_BOARD} STREQUAL "pc")
-#    set(KernelArch "x86" CACHE STRING "" FORCE)
-#    set(KernelPlatform "pc99" CACHE STRING "" FORCE)
-#    if(${TUT_ARCH} STREQUAL "ia32")
-#        set(KernelSel4Arch "ia32" CACHE STRING "" FORCE)
-#    elseif(${TUT_ARCH} STREQUAL "x86_64")
-#        set(KernelSel4Arch "x86_64" CACHE STRING "" FORCE)
-#    else()
-#        message(FATAL_ERROR "Unsupported PC architecture ${TUT_ARCH}")
-#    endif()
-#elseif(${TUT_BOARD} STREQUAL "zynq7000")
-#    # Do a quick check and warn the user if they haven't set
-#    # -DARM/-DAARCH32/-DAARCH64.
-#    if(
-#        (NOT ARM)
-#        AND (NOT AARCH32)
-#        AND ((NOT CROSS_COMPILER_PREFIX) OR ("${CROSS_COMPILER_PREFIX}" STREQUAL ""))
-#    )
-#        message(
-#            WARNING
-#                "The target machine is an ARM machine. Unless you've defined -DCROSS_COMPILER_PREFIX, you may need to set one of:\n\t-DARM/-DAARCH32/-DAARCH64"
-#        )
-#    endif()
-#
-#    set(KernelArch "arm" CACHE STRING "" FORCE)
-#    set(KernelSel4Arch "aarch32" CACHE STRING "" FORCE)
-#    set(KernelPlatform "zynq7000" CACHE STRING "" FORCE)
-#    ApplyData61ElfLoaderSettings(${KernelPlatform} ${KernelSel4Arch})
-#else()
-#    message(FATAL_ERROR "Unsupported board ${TUT_BOARD}.")
-#endif()
 
 include(/host/kernel/configs/seL4Config.cmake)
 set(CapDLLoaderMaxObjects 20000 CACHE STRING "" FORCE)
