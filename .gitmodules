@@ -10,3 +10,6 @@
 [submodule "seL4-CAmkES-L4v-dockerfiles"]
 	path = seL4-CAmkES-L4v-dockerfiles
 	url = https://github.com/seL4/seL4-CAmkES-L4v-dockerfiles.git
+[submodule "dobbyOS/projects/sel4_libs"]
+	path = dobbyOS/projects/sel4_libs
+	url = https://github.com/seL4/seL4_libs.git
