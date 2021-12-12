@@ -13,3 +13,6 @@
 [submodule "dobbyOS/projects/sel4_libs"]
 	path = dobbyOS/projects/sel4_libs
 	url = https://github.com/seL4/seL4_libs.git
+[submodule "dobbyOS/projects/sel4runtime"]
+	path = dobbyOS/projects/sel4runtime
+	url = https://github.com/seL4/sel4runtime.git
