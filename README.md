@@ -9,34 +9,27 @@ visit https://www.docker.com/ and figure out yourself
 **clone the repo**
 ```
 git clone https://github.com/43-50ph14/stud-os.git
-cd seL4-CAmkEs-L4v-dockerfiles
-make user
-make user_sel4-riscv
+# submodule stuff
+# symlink stuff
 ```
-to make your live easier, set an alias to start the docker container
+start docker container
 ```
-echo $'alias container_risc-v=\'make -C /<path>/<to>/seL4-CAmkES-L4v-dockerfiles user_sel4-riscv HOST_DIR=$(pwd)\'' >> ~/.bashrc
-```
-in a new terminal run
-```
-source ~/.bashrc
+make user_sel4-riscv HOST_DIR=/mnt/space/coding/UniZeug/sem05/studienarbeit/stud-os/dobbyOS
 ```
 reference: https://docs.sel4.systems/projects/dockerfiles/
 
 ## init build dir
  ```
- cd dobbyOS
  # start container
- container_risc-v
  # initialize build
  mkdir build && cd build
- ../init-build.sh -DPLATFORM=spike -DSIMULATION=TRUE
+ ../init-build.sh  -DPLATFORM=spike -DSIMULATION=TRUE -DCROSS_COMPILER_PREFIX=riscv64-unknown-linux-gnu- 
 ninja
 # simulate 
 ./simulate
 ```
  
-## something like a workflow
+## something like a workflow [TODO]
 
 1. work do stuff whatever
 2. simulate/compile
