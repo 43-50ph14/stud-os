@@ -51,3 +51,7 @@ ninja
 
 ⚠️ never ever bring a build directory to git!!! ⚠️
 
+## see me suffering
+
+https://md.margau.net/s/what-i-have-done#
+
