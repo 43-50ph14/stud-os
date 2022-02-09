@@ -257,7 +257,7 @@ BOOT_CODE void map_kernel_window(void)
     /* map log buffer page table. PTEs to be filled by user later by calling seL4_BenchmarkSetLogBuffer() */
     armKSGlobalPD[idx] =
         pde_pde_coarse_new(
-            addrFromPPtr(armKSGlobalLogPT), /* address */
+            addrFromKPPtr(armKSGlobalLogPT), /* address */
             true,                           /* P       */
             0                               /* Domain  */
         );
@@ -271,7 +271,7 @@ BOOT_CODE void map_kernel_window(void)
     /* map page table covering last 1M of virtual address space to page directory */
     armKSGlobalPD[idx] =
         pde_pde_coarse_new(
-            addrFromPPtr(armKSGlobalPT), /* address */
+            addrFromKPPtr(armKSGlobalPT), /* address */
             true,                        /* P       */
             0                            /* Domain  */
         );
@@ -281,7 +281,7 @@ BOOT_CODE void map_kernel_window(void)
 
     /* map vector table */
     map_kernel_frame(
-        addrFromPPtr(arm_vector_table),
+        addrFromKPPtr(arm_vector_table),
         PPTR_VECTOR_TABLE,
         VMKernelOnly,
         vm_attributes_new(
@@ -290,20 +290,6 @@ BOOT_CODE void map_kernel_window(void)
             true   /* armPageCacheable */
         )
     );
-
-#ifdef CONFIG_KERNEL_GLOBALS_FRAME
-    /* map globals frame */
-    map_kernel_frame(
-        addrFromPPtr(armKSGlobalsFrame),
-        seL4_GlobalsFrame,
-        VMReadOnly,
-        vm_attributes_new(
-            true,  /* armExecuteNever */
-            true,  /* armParityEnabled */
-            true   /* armPageCacheable */
-        )
-    );
-#endif /* CONFIG_KERNEL_GLOBALS_FRAME */
 
     map_kernel_devices();
 }
@@ -322,7 +308,7 @@ BOOT_CODE void map_kernel_window(void)
         pde = pdeS1_pdeS1_invalid_new();
         armHSGlobalPGD[idx] = pde;
     }
-    pde = pdeS1_pdeS1_coarse_new(0, 0, 0, 0, addrFromPPtr(armHSGlobalPD));
+    pde = pdeS1_pdeS1_coarse_new(0, 0, 0, 0, addrFromKPPtr(armHSGlobalPD));
     armHSGlobalPGD[3] = pde;
 
     /* Initialise PMD */
@@ -351,7 +337,7 @@ BOOT_CODE void map_kernel_window(void)
         phys += BIT(PT_INDEX_BITS + PAGE_BITS);
     }
     /* map page table covering last 2M of virtual address space */
-    pde = pdeS1_pdeS1_coarse_new(0, 0, 0, 0, addrFromPPtr(armHSGlobalPT));
+    pde = pdeS1_pdeS1_coarse_new(0, 0, 0, 0, addrFromKPPtr(armHSGlobalPT));
     armHSGlobalPD[idx] = pde;
 
     /* now start initialising the page table */
@@ -375,7 +361,7 @@ BOOT_CODE void map_kernel_window(void)
     }
     /* map vector table */
     map_kernel_frame(
-        addrFromPPtr(arm_vector_table),
+        addrFromKPPtr(arm_vector_table),
         PPTR_VECTOR_TABLE,
         VMKernelOnly,
         vm_attributes_new(
@@ -384,33 +370,6 @@ BOOT_CODE void map_kernel_window(void)
             true   /* armPageCacheable */
         )
     );
-
-#ifdef CONFIG_KERNEL_GLOBALS_FRAME
-    /* map globals frame */
-    map_kernel_frame(
-        addrFromPPtr(armKSGlobalsFrame),
-        seL4_GlobalsFrame,
-        VMReadOnly,
-        vm_attributes_new(
-            false, /* armExecuteNever */
-            true,  /* armParityEnabled */
-            true   /* armPageCacheable */
-        )
-    );
-    /* map globals into user global PT */
-    pteS2 = pte_pte_small_new(
-                1, /* Not Executeable */
-                0, /* Not contiguous */
-                addrFromPPtr(armKSGlobalsFrame),
-                1, /* AF -- always set */
-                0, /* Not shared */
-                HAPFromVMRights(VMReadOnly),
-                MEMATTR_CACHEABLE  /* Cacheable */
-            );
-    memzero(armUSGlobalPT, 1 << seL4_PageTableBits);
-    idx = (seL4_GlobalsFrame >> PAGE_BITS) & (MASK(PT_INDEX_BITS));
-    armUSGlobalPT[idx] = pteS2;
-#endif /* CONFIG_KERNEL_GLOBALS_FRAME */
 
     map_kernel_devices();
 }
@@ -589,7 +548,7 @@ BOOT_CODE void activate_global_pd(void)
        that everything we've written (particularly the kernel page tables)
        is committed. */
     cleanInvalidateL1Caches();
-    setCurrentPD(addrFromPPtr(armKSGlobalPD));
+    setCurrentPD(addrFromKPPtr(armKSGlobalPD));
     invalidateLocalTLB();
     lockTLBEntry(PPTR_BASE);
     lockTLBEntry(PPTR_VECTOR_TABLE);
@@ -606,7 +565,7 @@ BOOT_CODE void activate_global_pd(void)
     cleanInvalidateL1Caches();
     /* Setup the memory attributes: We use 2 indicies (cachable/non-cachable) */
     setHMAIR((ATTRINDX_NONCACHEABLE << 0) | (ATTRINDX_CACHEABLE << 8), 0);
-    setCurrentHypPD(addrFromPPtr(armHSGlobalPGD));
+    setCurrentHypPD(addrFromKPPtr(armHSGlobalPGD));
     invalidateHypTLB();
 #if 0 /* Can't lock entries on A15 */
     lockTLBEntry(PPTR_BASE);
@@ -850,7 +809,7 @@ static pte_t CONST makeUserPTE(vm_page_size_t page_size, paddr_t paddr,
                                     0, /* APX = 0, privileged full access */
                                     5, /* TEX = 0b101, outer write-back, write-allocate */
                                     ap,
-                                    0, 1, /* Inner write-back, write-allocate (except on ARM11) */
+                                    0, 1, /* Inner write-back, write-allocate */
                                     nonexecutable);
         } else {
             pte = pte_pte_small_new(paddr,
@@ -874,7 +833,7 @@ static pte_t CONST makeUserPTE(vm_page_size_t page_size, paddr_t paddr,
                                     SMP_TERNARY(1, 0), /* shareable if SMP enabled, otherwise unshared */
                                     0, /* APX = 0, privileged full access */
                                     ap,
-                                    0, 1, /* Inner write-back, write-allocate (except on ARM11) */
+                                    0, 1, /* Inner write-back, write-allocate */
                                     1 /* reserved */);
         } else {
             pte = pte_pte_large_new(paddr,
@@ -990,7 +949,7 @@ static pde_t CONST makeUserPDE(vm_page_size_t page_size, paddr_t paddr, bool_t p
                                    0, /* APX = 0, privileged full access */
                                    5, /* TEX = 0b101, outer write-back, write-allocate */
                                    ap, parity, domain, nonexecutable,
-                                   0, 1 /* Inner write-back, write-allocate (except on ARM11) */);
+                                   0, 1 /* Inner write-back, write-allocate */);
     } else {
         return pde_pde_section_new(paddr, size2,
                                    1, /* not global */
@@ -1050,9 +1009,9 @@ void setVMRoot(tcb_t *tcb)
     if (cap_get_capType(threadRoot) != cap_page_directory_cap ||
         !cap_page_directory_cap_get_capPDIsMapped(threadRoot)) {
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
-        setCurrentPD(addrFromPPtr(armUSGlobalPD));
+        setCurrentPD(addrFromKPPtr(armUSGlobalPD));
 #else
-        setCurrentPD(addrFromPPtr(armKSGlobalPD));
+        setCurrentPD(addrFromKPPtr(armKSGlobalPD));
 #endif
         return;
     }
@@ -1062,9 +1021,9 @@ void setVMRoot(tcb_t *tcb)
     find_ret = findPDForASID(asid);
     if (unlikely(find_ret.status != EXCEPTION_NONE || find_ret.pd != pd)) {
 #ifdef CONFIG_ARM_HYPERVISOR_SUPPORT
-        setCurrentPD(addrFromPPtr(armUSGlobalPD));
+        setCurrentPD(addrFromKPPtr(armUSGlobalPD));
 #else
-        setCurrentPD(addrFromPPtr(armKSGlobalPD));
+        setCurrentPD(addrFromKPPtr(armKSGlobalPD));
 #endif
         return;
     }
@@ -1243,14 +1202,6 @@ void copyGlobalMappings(pde_t *newPD)
             newPD[i] = global_pd[i];
         }
     }
-#else
-#ifdef CONFIG_KERNEL_GLOBALS_FRAME
-    /* Kernel and user MMUs are completely independent, however,
-     * we still need to share the globals page. */
-    pde_t pde;
-    pde = pde_pde_coarse_new(addrFromPPtr(armUSGlobalPT));
-    newPD[BIT(PD_INDEX_BITS) - 1] = pde;
-#endif /* CONFIG_KERNEL_GLOBALS_FRAME */
 #endif
 }
 
@@ -1886,7 +1837,7 @@ static exception_t performPageTableInvocationUnmap(cap_t cap, cte_t *ctSlot)
             cap_page_table_cap_get_capPTMappedASID(cap),
             cap_page_table_cap_get_capPTMappedAddress(cap),
             pt);
-        clearMemory((void *)pt, cap_get_capSizeBits(cap));
+        clearMemory_PT((void *)pt, cap_get_capSizeBits(cap));
     }
     cap_page_table_cap_ptr_set_capPTIsMapped(&(ctSlot->cap), 0);
 
@@ -2765,7 +2716,7 @@ exception_t benchmark_arch_map_logBuffer(word_t frame_cptr)
                 0  /* executable */
             );
 
-        cleanByVA_PoU((vptr_t)&armKSGlobalLogPT[idx], pptr_to_paddr(&armKSGlobalLogPT[idx]));
+        cleanByVA_PoU((vptr_t)&armKSGlobalLogPT[idx], addrFromKPPtr(&armKSGlobalLogPT[idx]));
         invalidateTranslationSingle(KS_LOG_PPTR + (idx * BIT(seL4_PageBits)));
     }
 

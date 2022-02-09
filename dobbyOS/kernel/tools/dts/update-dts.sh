@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 #
 # Copyright 2020, Data61, CSIRO (ABN 41 687 119 230)
 #
@@ -17,10 +17,6 @@ echo Using DTS from Linux $(make -s kernelversion)
 make ARCH=arm multi_v7_defconfig
 make ARCH=arm -j4 dtbs
 
-# for kzm
-make ARCH=arm imx_v6_v7_defconfig
-make ARCH=arm -j4 dtbs
-
 make ARCH=arm64 defconfig
 make ARCH=arm64 -j4 dtbs
 
@@ -36,6 +32,7 @@ LICENSE="/*
 "
 
 ARM_DTBS="
+am335x-bone=am335x-bone
 am335x-boneblack=am335x-boneblack
 am335x-boneblue=am335x-boneblue
 bcm2837-rpi-3-b=rpi3
@@ -43,7 +40,6 @@ exynos4412-odroidx=exynos4
 exynos5250-arndale=exynos5250
 exynos5410-odroidxu=exynos5410
 exynos5422-odroidxu4=exynos5422
-imx31-bug=kzm
 imx6q-sabrelite=sabre
 imx6q-wandboard-revd1=wandq
 imx7d-sdb=imx7sabre
@@ -55,6 +51,7 @@ zynq-zc706=zynq7000
 "
 
 ARM64_DTBS="
+amlogic/meson-sm1-odroid-c4=odroidc4
 amlogic/meson-gxbb-odroidc2=odroidc2
 hisilicon/hi6220-hikey=hikey
 nvidia/tegra210-p2371-2180=tx1

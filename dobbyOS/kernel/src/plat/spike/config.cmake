@@ -1,6 +1,7 @@
 #
 # Copyright 2020, DornerWorks
 # Copyright 2020, Data61, CSIRO (ABN 41 687 119 230)
+# Copyright 2021, HENSOLDT Cyber
 #
 # SPDX-License-Identifier: GPL-2.0-only
 #
@@ -26,8 +27,8 @@ if(KernelPlatformSpike)
         list(APPEND KernelDTSList "tools/dts/spike.dts")
     endif()
     declare_default_headers(
-        TIMER_FREQUENCY 10000000llu PLIC_MAX_NUM_INT 0
-        INTERRUPT_CONTROLLER arch/machine/plic.h
+        TIMER_FREQUENCY 10000000 PLIC_MAX_NUM_INT 0
+        INTERRUPT_CONTROLLER drivers/irq/riscv_plic_dummy.h
     )
 else()
     unset(KernelPlatformFirstHartID CACHE)

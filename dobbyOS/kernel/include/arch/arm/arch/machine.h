@@ -13,10 +13,6 @@
 
 #ifndef __ASSEMBLER__
 
-int get_num_avail_p_regs(void);
-const p_region_t *get_avail_p_regs(void);
-int get_num_dev_p_regs(void);
-p_region_t get_dev_p_reg(word_t i);
 void map_kernel_devices(void);
 
 void initL2Cache(void);
@@ -50,14 +46,15 @@ void cleanInvalidateL1Caches(void);
 static inline void clearMemory(word_t *ptr, word_t bits)
 {
     memzero(ptr, BIT(bits));
-    cleanCacheRange_PoU((word_t)ptr, (word_t)ptr + BIT(bits) - 1,
+    cleanCacheRange_RAM((word_t)ptr, (word_t)ptr + BIT(bits) - 1,
                         addrFromPPtr(ptr));
 }
 
-static inline void clearMemoryRAM(word_t *ptr, word_t bits)
+/* Cleaning memory before page table walker access */
+static inline void clearMemory_PT(word_t *ptr, word_t bits)
 {
     memzero(ptr, BIT(bits));
-    cleanCacheRange_RAM((word_t)ptr, (word_t)ptr + BIT(bits) - 1,
+    cleanCacheRange_PoU((word_t)ptr, (word_t)ptr + BIT(bits) - 1,
                         addrFromPPtr(ptr));
 }
 
@@ -67,10 +64,6 @@ static inline void arch_pause(void)
     /* TODO */
 }
 #endif /* ENABLE_SMP_SUPPORT */
-
-static inline void Arch_finaliseInterrupt(void)
-{
-}
 
 /* Update the value of the actual regsiter to hold the expected value */
 static inline exception_t Arch_setTLSRegister(word_t tls_base)
@@ -82,4 +75,3 @@ static inline exception_t Arch_setTLSRegister(word_t tls_base)
 }
 
 #endif /* __ASSEMBLER__ */
-
