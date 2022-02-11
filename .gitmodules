@@ -1,0 +1,21 @@
+[submodule "dobbyOS/projects/musllibc"]
+	path = dobbyOS/projects/musllibc
+	url = https://github.com/seL4/musllibc.git
+[submodule "dobbyOS/projects/util_libs"]
+	path = dobbyOS/projects/util_libs
+	url = https://github.com/seL4/util_libs.git
+[submodule "seL4-CAmkES-L4v-dockerfiles"]
+	path = seL4-CAmkES-L4v-dockerfiles
+	url = https://github.com/seL4/seL4-CAmkES-L4v-dockerfiles.git
+[submodule "dobbyOS/projects/sel4_libs"]
+	path = dobbyOS/projects/sel4_libs
+	url = https://github.com/seL4/seL4_libs.git
+[submodule "dobbyOS/projects/sel4runtime"]
+	path = dobbyOS/projects/sel4runtime
+	url = https://github.com/seL4/sel4runtime.git
+[submodule "dobbyOS/seL4"]
+	path = dobbyOS/seL4
+	url = https://github.com/seL4/seL4.git
+[submodule "dobbyOS/tools"]
+	path = dobbyOS/tools
+	url = https://github.com/43-50ph14/seL4_tools.git

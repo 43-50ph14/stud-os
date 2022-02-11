@@ -152,10 +152,15 @@ if(DEFINED KernelDTSList AND (NOT "${KernelDTSList}" STREQUAL ""))
         if(error)
             message(FATAL_ERROR "Failed to compile DTS to DTB: ${KernelDTBPath}")
         endif()
+        # CMAKE_HOST_APPLE is a built-in CMake variable
+        if(CMAKE_HOST_APPLE)
+            set(STAT_ARGS "-f%z")
+        else()
+            set(STAT_ARGS "-c '%s'")
+        endif()
         # Track the size of the DTB for downstream tools
         execute_process(
-            COMMAND
-                ${STAT_TOOL} -c '%s' ${KernelDTBPath}
+            COMMAND ${STAT_TOOL} ${STAT_ARGS} ${KernelDTBPath}
             OUTPUT_VARIABLE KernelDTBSize
             OUTPUT_STRIP_TRAILING_WHITESPACE
             RESULT_VARIABLE error
@@ -184,8 +189,8 @@ if(DEFINED KernelDTSList AND (NOT "${KernelDTSList}" STREQUAL ""))
                 ${PYTHON3} "${HARDWARE_GEN_PATH}" --dtb "${KernelDTBPath}" --compat-strings
                 --compat-strings-out "${compatibility_outfile}" --c-header --header-out
                 "${device_dest}" --hardware-config "${config_file}" --hardware-schema
-                "${config_schema}" --yaml --yaml-out "${platform_yaml}" --arch "${KernelArch}"
-                --addrspace-max "${KernelPaddrUserTop}"
+                "${config_schema}" --yaml --yaml-out "${platform_yaml}" --sel4arch
+                "${KernelSel4Arch}" --addrspace-max "${KernelPaddrUserTop}"
             RESULT_VARIABLE error
         )
         if(error)
@@ -364,7 +369,7 @@ config_option(
 config_choice(
     KernelBenchmarks
     KERNEL_BENCHMARK
-    "Enable benchamrks including logging and tracing info. \
+    "Enable benchmarks including logging and tracing info. \
     Setting this value > 1 enables a 1MB log buffer and functions for extracting data from it \
     at user level. NOTE this is only tested on the sabre and will not work on platforms with < 512mb memory. \
     This is not fully implemented for x86. \
@@ -386,7 +391,7 @@ else()
     config_set(KernelEnableBenchmarks ENABLE_BENCHMARKS OFF)
 endif()
 
-# Reflect the existance of kernel Log buffer
+# Reflect the existence of kernel Log buffer
 if(KernelBenchmarksTrackKernelEntries OR KernelBenchmarksTracepoints)
     config_set(KernelLogBuffer KERNEL_LOG_BUFFER ON)
 else()
