@@ -22,7 +22,7 @@ git submodule init
 git submodule update
 ```
 
-start docker container
+start docker container (you must be in seL4-CAmkES-L4v-dockerfiles directory)
 ```
 make user_sel4-riscv HOST_DIR=/<whatever>/stud-os/dobbyOS
 ```
