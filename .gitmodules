@@ -16,3 +16,6 @@
 [submodule "dobbyOS/seL4"]
 	path = dobbyOS/seL4
 	url = https://github.com/seL4/seL4.git
+[submodule "dobbyOS/tools"]
+	path = dobbyOS/tools
+	url = https://github.com/43-50ph14/seL4_tools.git
