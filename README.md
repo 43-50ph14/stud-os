@@ -5,16 +5,26 @@ implementation of an operating system for riscv
 ## to do once
 **install docker on your system**
 visit https://www.docker.com/ and figure out yourself
+start docker deamon 
 
 **clone the repo**
 ```
 git clone https://github.com/43-50ph14/stud-os.git
-# submodule stuff
-# symlink stuff
 ```
+**initialize submodule stuff**
+
+```
+# initialize submodules (you are at the top level directory)
+git submodule init
+git submodule update
+# now navigate to dobbyOS/tools and do the same again
+git submodule init
+git submodule update
+```
+
 start docker container
 ```
-make user_sel4-riscv HOST_DIR=/mnt/space/coding/UniZeug/sem05/studienarbeit/stud-os/dobbyOS
+make user_sel4-riscv HOST_DIR=/<whatever>/stud-os/dobbyOS
 ```
 reference: https://docs.sel4.systems/projects/dockerfiles/
 
@@ -33,13 +43,6 @@ ninja
 
 1. work do stuff whatever
 2. simulate/compile
-```
-# in your directory with the code
-conatiner_risc-v
-cd build
-ninja
-./simulate
-```
 
 
 ⚠️ never ever bring a build directory to git!!! ⚠️
