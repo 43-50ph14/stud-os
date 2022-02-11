@@ -30,7 +30,9 @@ cd $cwd/dobbyOS/projects/util_libs
 submoduleshit
 
 # tools
-cd $cwd/tools
+cd $cwd/dobbyOS/tools
+submoduleshit
+cd $cdw/dobbyOS
 submoduleshit
 
 
