@@ -39,6 +39,10 @@ ninja
 ./simulate
 ```
  
+## updating submodules
+
+to update all submodules simply run the `update_submodule.sh` script.
+ 
 ## something like a workflow [TODO]
 
 1. work do stuff whatever
