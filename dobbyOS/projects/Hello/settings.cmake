@@ -26,7 +26,7 @@ include(application_settings)
 
 include(${CMAKE_CURRENT_LIST_DIR}/easy-settings.cmake)
 
-correct_platform_strings()
+#correct_platform_strings()
 
 find_package(seL4 REQUIRED)
 sel4_configure_platform_settings()

@@ -1,0 +1,6 @@
+/host/build_2/opensbi/lib/utils/i2c/i2c.o: /host/tools/opensbi/lib/utils/i2c/i2c.c \
+ /host/tools/opensbi/include/sbi/sbi_error.h \
+ /host/tools/opensbi/include/sbi/sbi_ecall_interface.h \
+ /host/tools/opensbi/include/sbi_utils/i2c/i2c.h \
+ /host/tools/opensbi/include/sbi/sbi_types.h \
+ /host/tools/opensbi/include/sbi/sbi_list.h
