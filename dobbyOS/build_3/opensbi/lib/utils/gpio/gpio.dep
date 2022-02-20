@@ -1,0 +1,6 @@
+/host/build_3/opensbi/lib/utils/gpio/gpio.o: /host/tools/opensbi/lib/utils/gpio/gpio.c \
+ /host/tools/opensbi/include/sbi/sbi_error.h \
+ /host/tools/opensbi/include/sbi/sbi_ecall_interface.h \
+ /host/tools/opensbi/include/sbi_utils/gpio/gpio.h \
+ /host/tools/opensbi/include/sbi/sbi_types.h \
+ /host/tools/opensbi/include/sbi/sbi_list.h
