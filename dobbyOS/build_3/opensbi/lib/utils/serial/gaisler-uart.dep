@@ -1,0 +1,6 @@
+/host/build_3/opensbi/lib/utils/serial/gaisler-uart.o: /host/tools/opensbi/lib/utils/serial/gaisler-uart.c \
+ /host/tools/opensbi/include/sbi/riscv_io.h \
+ /host/tools/opensbi/include/sbi/riscv_barrier.h \
+ /host/tools/opensbi/include/sbi/sbi_types.h \
+ /host/tools/opensbi/include/sbi/sbi_console.h \
+ /host/tools/opensbi/include/sbi_utils/serial/gaisler-uart.h

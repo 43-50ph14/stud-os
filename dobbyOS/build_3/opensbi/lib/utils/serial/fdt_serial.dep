@@ -1,0 +1,14 @@
+/host/build_3/opensbi/lib/utils/serial/fdt_serial.o: /host/tools/opensbi/lib/utils/serial/fdt_serial.c \
+ /host/tools/opensbi/lib/utils/libfdt/libfdt.h \
+ /host/tools/opensbi/lib/utils/libfdt/libfdt_env.h \
+ /host/tools/opensbi/include/sbi/sbi_string.h \
+ /host/tools/opensbi/include/sbi/sbi_types.h \
+ /host/tools/opensbi/lib/utils/libfdt/fdt.h \
+ /host/tools/opensbi/include/sbi/sbi_error.h \
+ /host/tools/opensbi/include/sbi/sbi_ecall_interface.h \
+ /host/tools/opensbi/include/sbi/sbi_scratch.h \
+ /host/tools/opensbi/include/sbi/riscv_asm.h \
+ /host/tools/opensbi/include/sbi/riscv_encoding.h \
+ /host/tools/opensbi/include/sbi/sbi_const.h \
+ /host/tools/opensbi/include/sbi_utils/fdt/fdt_helper.h \
+ /host/tools/opensbi/include/sbi_utils/serial/fdt_serial.h
