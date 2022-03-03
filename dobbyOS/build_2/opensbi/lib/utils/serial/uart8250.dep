@@ -1,6 +1,0 @@
-/host/build_2/opensbi/lib/utils/serial/uart8250.o: /host/tools/opensbi/lib/utils/serial/uart8250.c \
- /host/tools/opensbi/include/sbi/riscv_io.h \
- /host/tools/opensbi/include/sbi/riscv_barrier.h \
- /host/tools/opensbi/include/sbi/sbi_types.h \
- /host/tools/opensbi/include/sbi/sbi_console.h \
- /host/tools/opensbi/include/sbi_utils/serial/uart8250.h
