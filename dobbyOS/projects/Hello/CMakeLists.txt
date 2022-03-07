@@ -13,5 +13,5 @@ target_link_libraries(Hello
 
 # Set this image as the rootserver
 DeclareRootserver(Hello)
-
-GenerateSimulateScript()
+#include(simulation)
+#GenerateSimulateScript()
