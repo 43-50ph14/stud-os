@@ -1,3 +1,0 @@
-/host/build_3/opensbi/lib/sbi/sbi_bitops.o: /host/tools/opensbi/lib/sbi/sbi_bitops.c \
- /host/tools/opensbi/include/sbi/sbi_bitops.h \
- /host/tools/opensbi/include/sbi/sbi_types.h

@@ -1,8 +1,0 @@
-/host/build_3/opensbi/lib/utils/sys/sifive_test.o: /host/tools/opensbi/lib/utils/sys/sifive_test.c \
- /host/tools/opensbi/include/sbi/riscv_io.h \
- /host/tools/opensbi/include/sbi/riscv_barrier.h \
- /host/tools/opensbi/include/sbi/sbi_types.h \
- /host/tools/opensbi/include/sbi/sbi_ecall_interface.h \
- /host/tools/opensbi/include/sbi/sbi_system.h \
- /host/tools/opensbi/include/sbi/sbi_list.h \
- /host/tools/opensbi/include/sbi_utils/sys/sifive_test.h
