@@ -51,7 +51,7 @@ to update all submodules simply run the `update_submodule.sh` script.
 
 ⚠️ never ever bring a build directory to git!!! ⚠️
 
-## see me suffering
+## metapad
 
-https://md.margau.net/s/what-i-have-done#
+https://md.margau.net/studienarbeit-meta?view
 
