@@ -4,7 +4,7 @@ include(settings.cmake)
 
 project(Hello C) # create a new C project called 'init' 
 
-add_executable(Hello src/main.c) # add files to our project. Paths are relative to this file.
+add_executable(Hello src/main.c src/io.c src/io.h) # add files to our project. Paths are relative to this file.
 
 target_link_libraries(Hello
 		sel4platsupport
