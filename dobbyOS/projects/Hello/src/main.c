@@ -40,7 +40,8 @@
 #include <utils/util.h>
 #include <sel4utils/util.h>
 #include <sel4utils/helpers.h>
-
+#include <threads.h>
+#include <sel4utils/thread.h>
 
 // the root CNode of the current thread
 extern seL4_CPtr root_cnode;
@@ -63,7 +64,7 @@ extern const char thread_ipc_buff_sym[4096];
 extern const char tcb_stack_base[65536];
 static const uintptr_t tcb_stack_top = (const uintptr_t)&tcb_stack_base + sizeof(tcb_stack_base);
 
-int call_once(int arg) {
+int my_call_once(int arg) {
     printf("Hello 3 %d\n", arg);
 }
 
@@ -100,7 +101,7 @@ int main(int c, char* arbv[]) {
 
 
     sel4utils_arch_init_local_context((void*)new_thread,
-                                  (void *)call_once, (void *)&data, (void *)3,
+                                  (void *)my_call_once, (void *)&data, (void *)3,
 
                                   (void *)tcb_stack_top, &regs);
     error = seL4_TCB_WriteRegisters(tcb_cap_slot, 0, 0, sizeof(regs)/sizeof(seL4_Word), &regs);

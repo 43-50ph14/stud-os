@@ -10,8 +10,8 @@ if (${PLATFORM} IN_LIST KernelRiscVPlatform_all_strings)
         set(KernelRiscVSel4Arch riscv64 CACHE STRING "" FORCE)
 endif()
 
-include(tools/cmake-tool/default-CMakeLists.txt)
 
+include(tools/cmake-tool/default-CMakeLists.txt)
 if(SIMULATION)
         ApplyCommonSimulationSettings("riscv64")
 else()
