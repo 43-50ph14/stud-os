@@ -81,7 +81,7 @@ int main(int c, char* arbv[]) {
 
     printf("Hello, World!\n");
 
-    //seL4_DebugDumpScheduler();
+    seL4_DebugDumpScheduler();
 
     seL4_Error result = seL4_Untyped_Retype(tcb_untyped, seL4_TCBObject, seL4_TCBBits, root_cnode, 0, 0, tcb_cap_slot, 1);
     ZF_LOGF_IF(result, "Failed to retype thread: %d", result);

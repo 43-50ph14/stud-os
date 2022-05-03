@@ -37,4 +37,4 @@ SIZED_SYMBOL(mainIpcBuffer, 4096, "size_12bit")
 
 
 
-char progname[] = "threads";
+char progname[] = "main";
