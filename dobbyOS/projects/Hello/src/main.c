@@ -1,117 +1,89 @@
-// #include <stdio.h>
-// #include <sel4/sel4.h>
-// #include <utils/util.h>
-// #include <sel4utils/util.h>
-// #include <sel4utils/helpers.h>
-// #include "io.h"
-// //#include "thread.h"
-
-// // extern seL4_CPtr root_cnode; //root CNode of current thread
-// // extern seL4_CPtr root_vspace; //Vspace of the current thread
-// // extern seL4_CPtr root_tcp; //untyped object large enough to create a new TCB object
-
-// // extern seL4_CPtr tcb_untyped;
-// // extern seL4_CPtr buf2_frame_cap;
-// // extern const char buf2_frame[4096];
-
-// // extern seL4_CPtr tcb_cap_slot; // empty solt for the new TCB object
-// // extern seL4_CPtr tcb_ipc_frame; //symbol for IPC buffer mapping in VSpace, and capability to the mappting
-// // extern const char thread_ipc_buff_sym[4096];
-// // extern const char tcb_stack_base[65536]; //symbol for top of 16 * 4 KiB stack mapping and capability to the mapping
-// // static const uintptr_t tcb_stack_top = (const uintptr_t)&tcb_stack_base + sizeof(tcb_stack_base);
-
-
-// int main(void)
-// {
-//     printf("The suffering ended\n");
-//     printf("hallo world 2.0\n");
-//     Out();
-// //    In();
-// //    basic_capability();
-
-//     //threads
-// //    seL4_DebugDumpScheduler();
-
-//     return 0;
-// }
 
 #include <stdio.h>
 #include <sel4/sel4.h>
+#include <sel4platsupport/bootinfo.h>
 #include <utils/util.h>
-#include <sel4utils/util.h>
-#include <sel4utils/helpers.h>
-#include <threads.h>
-#include <sel4utils/thread.h>
 
-// the root CNode of the current thread
-extern seL4_CPtr root_cnode;
-// VSpace of the current thread
-extern seL4_CPtr root_vspace;
-// TCB of the current thread
-extern seL4_CPtr root_tcb;
-// Untyped object large enough to create a new TCB object
-
-extern seL4_CPtr tcb_untyped;
-extern seL4_CPtr buf2_frame_cap;
-extern const char buf2_frame[4096];
-
-// Empty slot for the new TCB object
-extern seL4_CPtr tcb_cap_slot;
-// Symbol for the IPC buffer mapping in the VSpace, and capability to the mapping
-extern seL4_CPtr tcb_ipc_frame;
-extern const char thread_ipc_buff_sym[4096];
-// Symbol for the top of a 16 * 4KiB stack mapping, and capability to the mapping
-extern const char tcb_stack_base[65536];
-static const uintptr_t tcb_stack_top = (const uintptr_t)&tcb_stack_base + sizeof(tcb_stack_base);
-
-int my_call_once(int arg) {
-    printf("Hello 3 %d\n", arg);
-}
-
-int data = 42;
-
-int new_thread(void *arg1, void *arg2, void *arg3) {
-    printf("Hello2: arg1 %p, arg2 %p, arg3 %p\n", arg1, arg2, arg3);
-    void (*func)(int) = arg1;
-    func(*(int *)arg2);
-    while(1);
-}
-
-int main(int c, char* arbv[]) {
-
-    printf("Hello, World!\n");
-
-    seL4_DebugDumpScheduler();
-
-    seL4_Error result = seL4_Untyped_Retype(tcb_untyped, seL4_TCBObject, seL4_TCBBits, root_cnode, 0, 0, tcb_cap_slot, 1);
-    ZF_LOGF_IF(result, "Failed to retype thread: %d", result);
-    //seL4_DebugDumpScheduler();
-
-    result = seL4_TCB_Configure(tcb_cap_slot, seL4_CapNull, root_cnode, 0, root_vspace, 0, (seL4_Word) thread_ipc_buff_sym, tcb_ipc_frame);
-    ZF_LOGF_IF(result, "Failed to configure thread: %d", result);
-
-    result = seL4_TCB_SetPriority(tcb_cap_slot, root_tcb, 254);
-    ZF_LOGF_IF(result, "Failed to set the priority for the new TCB object.\n");
-    //seL4_DebugDumpScheduler();
-
-    UNUSED seL4_UserContext regs = {0};
-    int error = seL4_TCB_ReadRegisters(tcb_cap_slot, 0, 0, sizeof(regs)/sizeof(seL4_Word), &regs);
-    ZF_LOGF_IFERR(error, "Failed to write the new thread's register set.\n"
-                  "\tDid you write the correct number of registers? See arg4.\n");
+int main(int argc, char *argv[]) {
+    /* parse the location of the seL4_BootInfo data structure from
+    the environment variables set up by the default crt0.S */
+    seL4_BootInfo *info = platsupport_get_bootinfo();
 
 
-    sel4utils_arch_init_local_context((void*)new_thread,
-                                  (void *)my_call_once, (void *)&data, (void *)3,
+    printf("    CSlot   \tPaddr           \tSize\tType\n");
+    for (seL4_CPtr slot = info->untyped.start; slot != info->untyped.end; slot++) {
+        seL4_UntypedDesc *desc = &info->untypedList[slot - info->untyped.start];
+        printf("%8p\t%16p\t2^%d\t%s\n", (void *) slot, (void *) desc->paddr, desc->sizeBits, desc->isDevice ? "device untyped" : "untyped");
+    }
+    seL4_Error error;
 
-                                  (void *)tcb_stack_top, &regs);
-    error = seL4_TCB_WriteRegisters(tcb_cap_slot, 0, 0, sizeof(regs)/sizeof(seL4_Word), &regs);
-    ZF_LOGF_IFERR(error, "Failed to write the new thread's register set.\n"
-                  "\tDid you write the correct number of registers? See arg4.\n");
+    // list of general seL4 objects
+    seL4_Word objects[] = {seL4_TCBObject, seL4_EndpointObject, seL4_NotificationObject};
+    // list of general seL4 object size_bits
+    seL4_Word sizes[] = {seL4_TCBBits, seL4_EndpointBits, seL4_NotificationBits};
 
+    // seL4_EndpointBits and seL4_NotificationBits are both less than seL4_TCBBits, which
+    // means that all objects together fit into the size of two TCBs, or 2^(seL4_TCBBits + 1):
+    seL4_Word untyped_size_bits = seL4_TCBBits + 1;
+    seL4_CPtr parent_untyped = 0;
+    seL4_CPtr child_untyped = info->empty.start;
 
-    // resume the new thread
-    error = seL4_TCB_Resume(tcb_cap_slot);
-    ZF_LOGF_IFERR(error, "Failed to start new thread.\n");
-    while(1);
+    // First, find an untyped big enough to fit all of our objects
+    for (int i = 0; i < (info->untyped.end - info->untyped.start); i++) {
+        printf("i: %d\n", &i);
+        if (info->untypedList[i].sizeBits >= untyped_size_bits && !info->untypedList[i].isDevice) {
+            parent_untyped = info->untyped.start + i;
+            printf("parent: %d\n", &parent_untyped);
+            break;
+        }
+    }
+    // create an untyped big enough to retype all of the above objects from
+
+    error = seL4_Untyped_Retype(parent_untyped, // the untyped capability to retype
+                                seL4_UntypedObject, // type
+                                untyped_size_bits,  //size
+                                seL4_CapInitThreadCNode, // root
+                                0, // node_index
+                                0, // node_depth
+                                child_untyped, // node_offset
+                                1 // num_caps
+                                );
+//    ZF_LOGF_IF(error != seL4_NoError, "Failed to retype");
+
+    // use the slot after child_untyped for the new TCB cap:
+    seL4_CPtr child_tcb = child_untyped + 1;
+    seL4_Untyped_Retype(child_untyped, seL4_TCBObject, 0, seL4_CapInitThreadCNode, 0, 0, child_tcb, 1);
+
+    // try to set the TCB priority
+    error = seL4_TCB_SetPriority(child_tcb, seL4_CapInitThreadTCB, 10);
+ //   ZF_LOGF_IF(error != seL4_NoError, "Failed to set priority");
+
+    // use the slot after child_tcb for the new endpoint cap:
+    seL4_CPtr child_ep = child_tcb + 1;
+    seL4_Untyped_Retype(child_untyped, seL4_EndpointObject, 0, seL4_CapInitThreadCNode, 0, 0, child_ep, 1);
+
+    // identify the type of child_ep
+    uint32_t cap_id = seL4_DebugCapIdentify(child_ep);
+   // ZF_LOGF_IF(cap_id == 0, "Endpoint cap is null cap");
+
+    // use the slot after child_ep for the new notification cap:
+    seL4_CPtr child_ntfn = child_ep + 1;
+    seL4_Untyped_Retype(child_untyped, seL4_NotificationObject, 0, seL4_CapInitThreadCNode, 0, 0, child_ntfn, 1);
+
+    // try to use child_ntfn
+    error = seL4_TCB_BindNotification(child_tcb, child_ntfn);
+    //ZF_LOGF_IF(error != seL4_NoError, "Failed to bind notification.");
+
+    error = seL4_CNode_Revoke(seL4_CapInitThreadCNode, child_untyped, seL4_WordBits);
+    assert(error == seL4_NoError);
+
+    // allocate the whole child_untyped as endpoints
+    // Remember the sizes are exponents, so this computes 2^untyped_size_bits / 2^seL4_EndpointBits:
+    seL4_Word num_eps = BIT(untyped_size_bits - seL4_EndpointBits);
+    error = seL4_Untyped_Retype(child_untyped, seL4_EndpointObject, 0, seL4_CapInitThreadCNode, 0, 0, child_tcb, num_eps);
+   // ZF_LOGF_IF(error != seL4_NoError, "Failed to create endpoints.");
+
+    printf("Success\n");
+
     return 0;
 }

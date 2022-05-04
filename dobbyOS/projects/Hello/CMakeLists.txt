@@ -14,6 +14,7 @@ add_executable(Hello src/cspace_threads.c src/main.c src/io.c src/io.h src/capab
 target_link_libraries(Hello
 		sel4platsupport
 		sel4muslcsys
+                sel4 
 		)
 
 # Set this image as the rootserver
