@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     // seL4_EndpointBits and seL4_NotificationBits are both less than seL4_TCBBits, which
     // means that all objects together fit into the size of two TCBs, or 2^(seL4_TCBBits + 1):
-    seL4_Word untyped_size_bits = seL4_TCBBits + 1;
+    seL4_Word untyped_size_bits = seL4_TCBBits*3+1;
     seL4_CPtr parent_untyped = 0;
     seL4_CPtr child_untyped = info->empty.start;
 
@@ -38,16 +38,16 @@ int main(int argc, char *argv[]) {
         }
     }
     // create an untyped big enough to retype all of the above objects from
-
     error = seL4_Untyped_Retype(parent_untyped, // the untyped capability to retype
                                 seL4_UntypedObject, // type
                                 untyped_size_bits,  //size
-                                seL4_CapInitThreadCNode, // root
+                                seL4_CapInitThreadTCB, // root
                                 0, // node_index
                                 0, // node_depth
                                 child_untyped, // node_offset
                                 1 // num_caps
                                 );
+    printf("%d\n", error);
 //    ZF_LOGF_IF(error != seL4_NoError, "Failed to retype");
 
     // use the slot after child_untyped for the new TCB cap:
