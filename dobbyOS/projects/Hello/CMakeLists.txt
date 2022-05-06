@@ -15,7 +15,9 @@ target_link_libraries(Hello
 		sel4platsupport
 		sel4muslcsys
                 sel4 
-		)
+                utils
+                muslc
+ 		)
 
 # Set this image as the rootserver
 DeclareRootserver(Hello)
