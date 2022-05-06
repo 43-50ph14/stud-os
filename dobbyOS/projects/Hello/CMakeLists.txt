@@ -15,6 +15,7 @@ target_link_libraries(Hello
 		sel4platsupport
 		sel4muslcsys
                 sel4 
+                utils
 		)
 
 # Set this image as the rootserver
