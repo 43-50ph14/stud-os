@@ -17,7 +17,7 @@ target_link_libraries(Hello
                 sel4 
                 utils
                 muslc
- 		)
+                )
 
 # Set this image as the rootserver
 DeclareRootserver(Hello)
