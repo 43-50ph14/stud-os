@@ -8,6 +8,8 @@ int main(int argc, char *argv[]) {
     the environment variables set up by the default crt0.S */
     seL4_BootInfo *info = platsupport_get_bootinfo();
 
+    printf("untyped start: %d\n", info->untyped.start);
+    printf("untyped end: %d\n", info->untyped.end);
 
     printf("    CSlot   \tPaddr           \tSize\tType\n");
     for (seL4_CPtr slot = info->untyped.start; slot != info->untyped.end; slot++) {
@@ -25,11 +27,9 @@ int main(int argc, char *argv[]) {
 
     // TODO work out what size object we need to create to be able to create all of the objects
     // listed above. Remember that sizes are in bits, that is, the exponents of powers of two.
-    seL4_Word untyped_size_bits = seL4_TCBBits+1;
+    seL4_Word untyped_size_bits = seL4_TCBBits;
     seL4_CPtr parent_untyped = 0;
     seL4_CPtr child_untyped = info->empty.start;
-
-    printf("cond: %d\n", (info->untyped.end - info->untyped.start));
 
     // First, find an untyped big enough to fit all of our objects
     for (int i = 0; i < (info->untyped.end - info->untyped.start); i++) {
@@ -38,21 +38,26 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-    printf("parent: %x\n", parent_untyped);
-    printf("CNODE: %x\n", seL4_CapInitThreadCNode); 
-    child_untyped = 0;
-    // create an untyped big enough to retype all of the above objects from
+    
+    printf("untyped start: %d\n", info->untyped.start);
+    printf("untyped end: %d\n", info->untyped.end);
+    printf("parent: %d\n", parent_untyped);
+    printf("CNODE: %d\n", seL4_CapInitThreadCNode); 
+    printf("child: %d\n", child_untyped);
+    printf("untyped size: %d\n", untyped_size_bits); 
+    printf("untyped object: %d\n", seL4_UntypedObject);    
 
+    // create an untyped big enough to retype all of the above objects from
     error = seL4_Untyped_Retype(parent_untyped, // the untyped capability to retype
                                 seL4_UntypedObject, // type
                                 untyped_size_bits,  //size
                                 seL4_CapInitThreadCNode, // root
                                 0, // node_index
-                                32, // node_depth
+                                0, // node_depth
                                 child_untyped, // node_offset
                                 1 // num_caps
                                 );
-    printf("error: %d\n", error); 
+    printf("error: %d\n", error);
     ZF_LOGF_IF(error != seL4_NoError, "Failed to retype");
 
     // use the slot after child_untyped for the new TCB cap:

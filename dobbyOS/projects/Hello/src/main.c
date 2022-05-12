@@ -1,40 +1,3 @@
-// #include <stdio.h>
-// #include <sel4/sel4.h>
-// #include <utils/util.h>
-// #include <sel4utils/util.h>
-// #include <sel4utils/helpers.h>
-// #include "io.h"
-// //#include "thread.h"
-
-// // extern seL4_CPtr root_cnode; //root CNode of current thread
-// // extern seL4_CPtr root_vspace; //Vspace of the current thread
-// // extern seL4_CPtr root_tcp; //untyped object large enough to create a new TCB object
-
-// // extern seL4_CPtr tcb_untyped;
-// // extern seL4_CPtr buf2_frame_cap;
-// // extern const char buf2_frame[4096];
-
-// // extern seL4_CPtr tcb_cap_slot; // empty solt for the new TCB object
-// // extern seL4_CPtr tcb_ipc_frame; //symbol for IPC buffer mapping in VSpace, and capability to the mappting
-// // extern const char thread_ipc_buff_sym[4096];
-// // extern const char tcb_stack_base[65536]; //symbol for top of 16 * 4 KiB stack mapping and capability to the mapping
-// // static const uintptr_t tcb_stack_top = (const uintptr_t)&tcb_stack_base + sizeof(tcb_stack_base);
-
-
-// int main(void)
-// {
-//     printf("The suffering ended\n");
-//     printf("hallo world 2.0\n");
-//     Out();
-// //    In();
-// //    basic_capability();
-
-//     //threads
-// //    seL4_DebugDumpScheduler();
-
-//     return 0;
-// }
-
 #include <stdio.h>
 #include <sel4/sel4.h>
 #include <utils/util.h>
@@ -79,9 +42,11 @@ int new_thread(void *arg1, void *arg2, void *arg3) {
 
 int main(int c, char* arbv[]) {
 
-    printf("Hello, World!\n");
 
+    printf("Hello, World!\n");
+    seL4_CapBootInfoFrame;
     seL4_DebugDumpScheduler();
+
 
     printf("tcp_untyped: %d\nseL4_TCB: %d\ntcbbit: %d\nroot: %d\n cap: %d\n", tcb_untyped, seL4_TCBObject, seL4_TCBBits, root_cnode, tcb_cap_slot);
 
