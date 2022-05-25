@@ -16,3 +16,6 @@
 [submodule "dobbyOS/tools"]
 	path = dobbyOS/tools
 	url = https://github.com/43-50ph14/seL4_tools.git
+[submodule "dockerimg"]
+	path = seL4-CAmkES-L4v-dockerfiles
+	url = https://github.com/43-50ph14/seL4-CAmkES-L4v-dockerfiles.git
