@@ -17,7 +17,6 @@ target_link_libraries(Hello
                 sel4 
                 utils
                 muslc
-                sel4debug
                 sel4utils
                 )
 

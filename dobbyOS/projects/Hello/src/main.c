@@ -17,8 +17,6 @@ int main(int argc, char *argv[]) {
     }
     seL4_Error error;
 
-    printf("nodes: %d\n", info->numNodes);
-
     // list of general seL4 objects
     seL4_Word objects[] = {seL4_TCBObject, seL4_EndpointObject, seL4_NotificationObject};
     // list of general seL4 object size_bits
@@ -29,7 +27,6 @@ int main(int argc, char *argv[]) {
     seL4_Word untyped_size_bits = seL4_TCBBits + 1;
     seL4_CPtr parent_untyped = 0;
     seL4_CPtr child_untyped = info->empty.start;
-    printf("child: %d\n", child_untyped);
 
     // First, find an untyped big enough to fit all of our objects
     for (int i = 0; i < (info->untyped.end - info->untyped.start); i++) {
@@ -39,6 +36,10 @@ int main(int argc, char *argv[]) {
         }
     }
     // create an untyped big enough to retype all of the above objects from
+    printf("parent: %d\nuntypedo: %d\nsizebits: %d\ncapthread: %d\nchild: %d\n", parent_untyped, seL4_UntypedObject, untyped_size_bits, seL4_CapInitThreadCNode, child_untyped);
+    
+    parent_untyped = 340;
+    child_untyped = 380;
 
     error = seL4_Untyped_Retype(parent_untyped, // the untyped capability to retype
                                 seL4_UntypedObject, // type
