@@ -18,6 +18,7 @@ target_link_libraries(Hello
                 utils
                 muslc
                 sel4utils
+		sel4debug
                 )
 
 # Set this image as the rootserver

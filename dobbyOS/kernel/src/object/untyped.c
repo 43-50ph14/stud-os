@@ -125,6 +125,7 @@ exception_t decodeUntypedInvocation(word_t invLabel, word_t length, cte_t *slot,
 
     /* Is the destination actually a CNode? */
     if (cap_get_capType(nodeCap) != cap_cnode_cap) {
+        printf("nodeCapType: %lld\ncap_cnode_cap: %d\n", cap_get_capType(nodeCap), cap_cnode_cap);
         userError("Untyped Retype: Destination cap invalid or read-only.");
         current_syscall_error.type = seL4_FailedLookup;
         current_syscall_error.failedLookupWasSource = 0;
