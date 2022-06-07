@@ -123,6 +123,9 @@ exception_t decodeUntypedInvocation(word_t invLabel, word_t length, cte_t *slot,
         nodeCap = lu_ret.slot->cap;
     }
 
+    printf("nodeCapType: %lld\ncap_cnode_cap: %d\n", cap_get_capType(nodeCap), cap_cnode_cap);
+
+
     /* Is the destination actually a CNode? */
     if (cap_get_capType(nodeCap) != cap_cnode_cap) {
         printf("nodeCapType: %lld\ncap_cnode_cap: %d\n", cap_get_capType(nodeCap), cap_cnode_cap);

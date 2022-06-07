@@ -35,11 +35,10 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
+
     // create an untyped big enough to retype all of the above objects from
     printf("parent: %d\nuntypedo: %d\nsizebits: %d\ncapthread: %d\nchild: %d\n", parent_untyped, seL4_UntypedObject, untyped_size_bits, seL4_CapInitThreadCNode, child_untyped);
    
-    parent_untyped = 394;
- 
     error = seL4_Untyped_Retype(parent_untyped, // the untyped capability to retype
                                 seL4_UntypedObject, // type
                                 untyped_size_bits,  //size
@@ -49,6 +48,7 @@ int main(int argc, char *argv[]) {
                                 child_untyped, // node_offset
                                 1 // num_caps
                                 );
+    printf("error: %d\n", error);
     ZF_LOGF_IF(error != seL4_NoError, "Failed to retype");
 
     // use the slot after child_untyped for the new TCB cap:

@@ -48,10 +48,9 @@ set_property(
 
 # These options are now set in seL4Config.cmake
 if(DEFINED CALLED_declare_default_headers)
-    # calculate the irq cnode size based on MAX_IRQ
+    # calculate the irq cnode size based on MAX_NUM_IRQ
     if("${KernelArch}" STREQUAL "riscv")
-        set(MAX_IRQ "${CONFIGURE_PLIC_MAX_NUM_INT}")
-        math(EXPR MAX_NUM_IRQ "${MAX_IRQ} + 2")
+        math(EXPR MAX_NUM_IRQ "${CONFIGURE_PLIC_MAX_NUM_INT} + 2")
     else()
         if(
             DEFINED KernelMaxNumNodes
@@ -71,13 +70,12 @@ if(DEFINED CALLED_declare_default_headers)
         math(EXPR BITS "${BITS} + 1")
         math(EXPR MAX_NUM_IRQ "${MAX_NUM_IRQ} >> 1")
     endwhile()
-    math(EXPR SLOTS "1 << ${BITS}")
-    if("${SLOTS}" LESS "${MAX_IRQ}")
-        math(EXPR BITS "${BITS} + 1")
-    endif()
     set(CONFIGURE_IRQ_SLOT_BITS "${BITS}" CACHE INTERNAL "")
     if(NOT DEFINED CONFIGURE_TIMER_PRECISION)
         set(CONFIGURE_TIMER_PRECISION "0")
+    endif()
+    if(NOT DEFINED CONFIGURE_TIMER_OVERHEAD_TICKS)
+        set(CONFIGURE_TIMER_OVERHEAD_TICKS "0")
     endif()
     configure_file(
         src/arch/${KernelArch}/platform_gen.h.in
@@ -152,8 +150,10 @@ if(DEFINED KernelDTSList AND (NOT "${KernelDTSList}" STREQUAL ""))
         if(error)
             message(FATAL_ERROR "Failed to compile DTS to DTB: ${KernelDTBPath}")
         endif()
-        # CMAKE_HOST_APPLE is a built-in CMake variable
-        if(CMAKE_HOST_APPLE)
+        # The macOS and GNU coreutils `stat` utilities have different interfaces.
+        # Check if we're using the macOS version, otherwise assume GNU coreutils.
+        # CMAKE_HOST_APPLE is a built-in CMake variable.
+        if(CMAKE_HOST_APPLE AND "${STAT_TOOL}" STREQUAL "/usr/bin/stat")
             set(STAT_ARGS "-f%z")
         else()
             set(STAT_ARGS "-c '%s'")
