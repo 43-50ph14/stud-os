@@ -9,7 +9,7 @@ project(Hello C ASM) # create a new C project called 'init'
 #  CFILE "${CMAKE_CURRENT_BINARY_DIR}/cspace_threads.c"
 #)
 
-add_executable(Hello src/cspace_threads.c src/main.c src/io.c src/io.h src/capabilities.c src/capabilities.h) # add files to our project. Paths are relative to this file.
+add_executable(Hello src/main.c src/io.c src/io.h src/capabilities.c src/capabilities.h) # add files to our project. Paths are relative to this file.
 
 target_link_libraries(Hello
 		sel4platsupport
